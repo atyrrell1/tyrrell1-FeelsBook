@@ -1,6 +1,5 @@
 package com.example.atyrrell.tyrrell1_feelsbook;
 
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,17 +15,22 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
+/* The feelings that the user records are stored in ArrayList. I chose an ArrayList because I am most familiar with
+them than other Collections. I knew I could also specify it to be of type Feelings.
+ */
 public class Feelings_Storage{
 
     private ArrayList<Feelings> feelingsList;
     private ArrayList<Integer> count;
 
+    //Constructor for the Feelings_Storage Class
     public Feelings_Storage(){
         this.feelingsList = new ArrayList<Feelings>();
         this.count = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0,0));
 
     }
 
+    //getters and setters for Feeling_Storage
     public ArrayList<Feelings> getFeelingslist(){
         return this.feelingsList;
     }
@@ -47,6 +51,11 @@ public class Feelings_Storage{
         this.feelingsList.remove(emotion);
     }
 
+    public void clearFeelingsList (){
+        this.feelingsList.clear();
+    }
+
+    //Sort the feelingsList array by most recent Feelings
     public void sort (){
         Collections.sort(this.feelingsList, new Comparator<Feelings>() {
             @Override
@@ -56,10 +65,7 @@ public class Feelings_Storage{
         });
     }
 
-    public void clearFeelingsList (){
-        this.feelingsList.clear();
-    }
-
+    //Increment the emotions count
     public void incrementcount(Feelings emotion){
         if (emotion.getFeeling_type().equals("Love")){
             this.count.set(0,this.count.get(0)+1);
@@ -81,6 +87,7 @@ public class Feelings_Storage{
         }
     }
 
+    //Decrement the emotions count
     public void decrementcount(Feelings emotion){
         if (emotion.getFeeling_type().equals("Love")){
             this.count.set(0,this.count.get(0)-1);
@@ -102,6 +109,7 @@ public class Feelings_Storage{
         }
     }
 
+    //Save the items of feelingsList to a file
     public void saveFeelingFile(FileOutputStream fos){
         try{
             for (Feelings emotion : this.feelingsList){
@@ -117,6 +125,7 @@ public class Feelings_Storage{
         }
     }
 
+    //Load the file. Take the lines of the file (which are String Objects) and turn them into Feelings. Fill the ArrayList
     public void loadFeelingfile (FileInputStream fis){
         Feelings feelingfromfile;
         try{
@@ -136,6 +145,7 @@ public class Feelings_Storage{
         }
     }
 
+    //convert a String object into a Feelings Object
     private Feelings StringtoFeelings (String stringfromFile){
         Feelings emotion;
         String [] newstring = stringfromFile.split("\\|+");

@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/*This activity displays the count of emotion*/
+
 public class CountActivity extends AppCompatActivity {
 
     private TextView love_count;

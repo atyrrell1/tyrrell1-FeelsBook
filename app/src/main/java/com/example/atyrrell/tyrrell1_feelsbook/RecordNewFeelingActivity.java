@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Date;
 
+
 public class RecordNewFeelingActivity extends AppCompatActivity{
 
     private RadioGroup feelingsgroup;

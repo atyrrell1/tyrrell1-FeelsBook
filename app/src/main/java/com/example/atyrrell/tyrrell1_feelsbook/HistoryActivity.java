@@ -46,6 +46,9 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
+    /*This Alert Dialog appears when a user clicks on the feeling that they wish to edit. They can edit the
+    date or the comment. They can also delete the emotion from the History as well.
+     */
     private void editAlertDialog(final Feelings emotion, final int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -115,6 +118,7 @@ public class HistoryActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    //This Alert Dialog appears when the date changed by the user is invalid.
     private void exceptionalertdialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Error");
@@ -129,6 +133,7 @@ public class HistoryActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    //Save the feelingsList into a file.
     public void saveFile() {
         try {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);

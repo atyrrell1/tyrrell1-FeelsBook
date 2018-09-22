@@ -11,10 +11,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/*This class is to be used by HistoryActivity.class to create a custom ArrayAdapter and ListView.
+* The ListView will show the description of the feeling and the timestamp that is associated with that particular
+* feeling. */
+
 public class ListItemsAdapter extends ArrayAdapter<Feelings> {
 
     private ArrayList<Feelings> feelingslist;
-
     private Context feelingcontext;
 
     public ListItemsAdapter (@NonNull Context context, ArrayList<Feelings> list){
