@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+//This class displays the emotions that the user has entered.
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -73,7 +74,12 @@ public class HistoryActivity extends AppCompatActivity {
         layout.addView(editcommenttitle);
 
         final EditText editcomment = new EditText(this);
-        editcomment.setText(emotion.getOptionalComment());
+        if (emotion.getOptionalComment().equals("Default")){
+            editcomment.setText("");
+        }
+        else {
+            editcomment.setText(emotion.getOptionalComment());
+        }
         layout.addView(editcomment);
 
         builder.setView(layout);
@@ -85,7 +91,13 @@ public class HistoryActivity extends AppCompatActivity {
                 MainActivity.feelingslist.getFeeling(position).setTimestamp(newdate);
 
                 if (editdate.getText().toString().equals(MainActivity.feelingslist.getFeeling(position).getDatetostring())){
-                    emotion.setOptional_comment(editcomment.getText().toString());
+                    String comment;
+                    if (editcomment.getText().toString().equals("")){
+                        comment = "Default";
+                    }
+                    else {
+                        emotion.setOptional_comment(editcomment.getText().toString());
+                    }
                     MainActivity.feelingslist.getFeeling(position).setOptional_comment(editcomment.getText().toString());
                     MainActivity.feelingslist.sort();
                     saveFile();

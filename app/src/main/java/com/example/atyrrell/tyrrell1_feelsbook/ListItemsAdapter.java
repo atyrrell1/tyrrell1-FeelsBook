@@ -26,6 +26,7 @@ public class ListItemsAdapter extends ArrayAdapter<Feelings> {
         feelingslist = list;
     }
 
+    /*This creates a custom ListView which displays the feeling description and the date.*/
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

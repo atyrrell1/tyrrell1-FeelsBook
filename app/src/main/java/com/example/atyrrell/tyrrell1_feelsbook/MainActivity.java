@@ -73,8 +73,12 @@ public class MainActivity extends AppCompatActivity {
                                    }
         );
 
+        //Initialize data.
         feelingslist.clearFeelingsList();
+        feelingslist.clearCountList();
         loadFile();
+        feelingslist.getCount();
+
     }
 
     /*Change to the Record New Feeling page*/

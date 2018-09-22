@@ -1,10 +1,13 @@
 package com.example.atyrrell.tyrrell1_feelsbook;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+//Feelings class consists of getters, setters, and operations that turn a Date object of a Feeling object into a String object.
 public class Feelings {
 
     private String feeling_type; //can be Love, Joy, Surprise, Anger, Sadness, or Fear

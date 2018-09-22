@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +15,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Date;
 
-
+/*This java class lets the user record a new activity. They can choose from a preset list and add
+an optional comment. The optional comment can only be a maximum of 100 characters which is preset in the
+activity_record_new_feeling.xml file.
+ */
 public class RecordNewFeelingActivity extends AppCompatActivity{
 
     private RadioGroup feelingsgroup;
@@ -35,7 +39,9 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
         savebutton = (Button) findViewById(R.id.savebutton);
         savebutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Feelings emotion = new Feelings (radioButton.getText().toString(),new Date(), comment.getText().toString());
+                String optionalcomment = comment.getText().toString();
+
+                Feelings emotion = new Feelings (radioButton.getText().toString(), new Date(), optionalcomment);
                 MainActivity.feelingslist.addFeeling(emotion);
                 MainActivity.feelingslist.sort();
                 MainActivity.feelingslist.incrementcount(emotion);
@@ -45,6 +51,7 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
         });
     }
 
+    //get the ID of the emotion chosen
     public void rbclick (View view){
         radiobuttonid = feelingsgroup.getCheckedRadioButtonId();
         radioButton = (RadioButton) findViewById(radiobuttonid);
@@ -55,6 +62,7 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
+    //Update and save the file since another emotion was added to it.
     public void saveFile() {
         try {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);

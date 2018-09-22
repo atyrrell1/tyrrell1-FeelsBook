@@ -1,5 +1,7 @@
 package com.example.atyrrell.tyrrell1_feelsbook;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,16 +37,22 @@ public class Feelings_Storage{
         return this.feelingsList;
     }
 
+    public void getCount(){
+        for (Feelings item : this.feelingsList) {
+            incrementcount(item);
+        }
+    }
+
     public ArrayList<Integer> getCountlist(){
         return this.count;
     }
 
     public Feelings getFeeling(Integer index){
-        return feelingsList.get(index);
+        return this.feelingsList.get(index);
     }
 
     public void addFeeling(Feelings emotion){
-       feelingsList.add(emotion);
+       this.feelingsList.add(emotion);
     }
 
     public void deleteFeeling (Feelings emotion){
@@ -53,6 +61,10 @@ public class Feelings_Storage{
 
     public void clearFeelingsList (){
         this.feelingsList.clear();
+    }
+
+    public void clearCountList(){
+        this.count = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0,0));
     }
 
     //Sort the feelingsList array by most recent Feelings
@@ -148,10 +160,17 @@ public class Feelings_Storage{
     //convert a String object into a Feelings Object
     private Feelings StringtoFeelings (String stringfromFile){
         Feelings emotion;
-        String [] newstring = stringfromFile.split("\\|+");
+        String feelingcomment;
+
+        String [] newstring = stringfromFile.split("\\|");
         String feelingdesc = newstring[0];
         String feelingdatestring = newstring[1];
-        String feelingcomment = newstring[2];
+        if (newstring.length == (2)){
+            feelingcomment = "";
+        }
+        else{
+           feelingcomment = newstring[2];
+        }
         Date feelingdate = new Date();
         try {
             feelingdate = new SimpleDateFormat(("yyyy-MM-dd'T'HH:mm:ss"), Locale.CANADA).parse(feelingdatestring);
