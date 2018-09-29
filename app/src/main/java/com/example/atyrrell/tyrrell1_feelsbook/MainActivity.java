@@ -7,9 +7,7 @@
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.
         You may obtain a copy of the License at
-
         http://www.apache.org/licenses/LICENSE-2.0
-
         Unless required by applicable law or agreed to in writing, software
         distributed under the License is distributed on an "AS IS" BASIS,
         WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +30,9 @@ import java.io.FileNotFoundException;
 easily from other classes (e.g RecordNewFeelingActivity.java, HistoryActivity.java, and CountActivity.java). It
 made most sense to create the object here since all three classes are constantly accessing it. Also, I can load
 the file into it, when the app returns to this activity. feelingslist needed to be cleared each time before loading the file
-or there would be duplicate Feelings objects displayed.
+or there would be duplicate Feelings objects displayed. I did not use the gson method of saving the file because even though it
+was object oriented, it kept throwing a Runtime error. I also attempted to use to split the gson method and have most of
+it in the Feeling_Storage class rather than in the GUI classes but I was unsuccessful.
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Initialize and set up the new record button
         Button Record = (Button) findViewById(R.id.button);
         Record.setOnClickListener(new View.OnClickListener() {
                                       @Override
@@ -56,32 +58,37 @@ public class MainActivity extends AppCompatActivity {
                                       }
                                   }
         );
+
+        //Initialize and set up the history button
         Button History = (Button) findViewById(R.id.button2);
         History.setOnClickListener(new View.OnClickListener() {
-                                      @Override
-                                      public void onClick(View v) {
-                                          HistoryActivity(v);
-                                      }
-                                  }
-        );
-        Button Count = (Button) findViewById(R.id.button3);
-        Count.setOnClickListener(new View.OnClickListener() {
                                        @Override
                                        public void onClick(View v) {
-                                           CountActivity(v);
+                                           HistoryActivity(v);
                                        }
                                    }
+        );
+
+        //Initialize and set up the count button.
+        Button Count = (Button) findViewById(R.id.button3);
+        Count.setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         CountActivity(v);
+                                     }
+                                 }
         );
 
         //Initialize data.
         feelingslist.clearFeelingsList();
         feelingslist.clearCountList();
+
+        //Load data from the file into feelingslist object of type Feelings_Storage.
         loadFile();
         feelingslist.getCount();
-
     }
 
-    /*Change to the Record New Feeling page*/
+    //Change to the Record New Feeling page
     public void RecordNewActivity(View view) {
         Intent intent = new Intent(this, RecordNewFeelingActivity.class);
         startActivity(intent);

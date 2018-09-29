@@ -1,7 +1,5 @@
 package com.example.atyrrell.tyrrell1_feelsbook;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +18,7 @@ import java.util.Locale;
 /* The feelings that the user records are stored in ArrayList. I chose an ArrayList because I am most familiar with
 them than other Collections. I knew I could also specify it to be of type Feelings.
  */
+
 public class Feelings_Storage{
 
     private ArrayList<Feelings> feelingsList;
@@ -52,17 +51,19 @@ public class Feelings_Storage{
     }
 
     public void addFeeling(Feelings emotion){
-       this.feelingsList.add(emotion);
+        this.feelingsList.add(emotion);
     }
 
     public void deleteFeeling (Feelings emotion){
         this.feelingsList.remove(emotion);
     }
 
+    //Clear all the feelings from Feelings_Storage
     public void clearFeelingsList (){
         this.feelingsList.clear();
     }
 
+    //Clear all the counts from the CountList, and reinitialize all the counts back to zero.
     public void clearCountList(){
         this.count = new ArrayList<Integer>(Arrays.asList(0,0,0,0,0,0));
     }
@@ -125,7 +126,7 @@ public class Feelings_Storage{
     public void saveFeelingFile(FileOutputStream fos){
         try{
             for (Feelings emotion : this.feelingsList){
-            fos.write(emotion.feelingstoString().getBytes());
+                fos.write(emotion.feelingstoString().getBytes());
             }
             fos.close();
         }
@@ -169,7 +170,7 @@ public class Feelings_Storage{
             feelingcomment = "";
         }
         else{
-           feelingcomment = newstring[2];
+            feelingcomment = newstring[2];
         }
         Date feelingdate = new Date();
         try {

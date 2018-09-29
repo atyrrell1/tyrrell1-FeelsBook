@@ -1,7 +1,5 @@
 package com.example.atyrrell.tyrrell1_feelsbook;
 
-import android.util.Log;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,7 +12,7 @@ public class Feelings {
     private Date timestamp;
     private String optional_comment;
 
-
+    //Constructor for the Feelings class
     Feelings(String feeling, Date time, String comment){
         this.feeling_type = feeling;
         this.timestamp = time;
@@ -63,6 +61,5 @@ public class Feelings {
     public String feelingstoString (){
         return this.feeling_type + "|" + this.getDatetostring() + "|" + this.optional_comment + "\n";
     }
-
 
 }

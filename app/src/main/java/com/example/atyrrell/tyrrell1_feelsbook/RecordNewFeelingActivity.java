@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,11 +36,16 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
         comment = (EditText) findViewById(R.id.editText);
 
         savebutton = (Button) findViewById(R.id.savebutton);
+
+        /*Saves the emotion in the Main Activity's feelingList and sorts the list. The count arraylist is also
+        incremented to include the new emotion*/
         savebutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Gets the comment
                 String optionalcomment = comment.getText().toString();
-
+                //Creates a new Feeling object with the information the user recorded
                 Feelings emotion = new Feelings (radioButton.getText().toString(), new Date(), optionalcomment);
+
                 MainActivity.feelingslist.addFeeling(emotion);
                 MainActivity.feelingslist.sort();
                 MainActivity.feelingslist.incrementcount(emotion);
@@ -57,8 +61,9 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
         radioButton = (RadioButton) findViewById(radiobuttonid);
     }
 
+    //Changes the Activity back to the Main Activity
     public void save(View view){
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
