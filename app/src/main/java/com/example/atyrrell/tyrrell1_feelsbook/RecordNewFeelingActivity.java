@@ -32,10 +32,10 @@ import java.io.FileOutputStream;
 import java.util.Date;
 
 /*This class is to be used as the "homepage". By creating a Feelings_Storage object here, I can access it
-easily from other classes (e.g RecordNewFeelingActivity.java, HistoryActivity.java, and CountActivity.java). It
-made most sense to create the object here since all three classes are constantly accessing it. Also, I can load
-the file into it, when the app returns to this activity. feelingslist needed to be cleared each time before loading the file
-or there would be duplicate Feelings objects displayed. I did not use the gson method of saving the file because even though it
+easily from other classes (e.g HistoryActivity.java, and CountActivity.java). It made most sense to create the
+object here since all three classes are constantly accessing it. Also, I can load the file into it, when the
+app returns to this activity. feelingslist needed to be cleared each time before loading the file or there would
+be duplicate Feelings objects displayed. I did not use the gson method of saving the file because even though it
 was object oriented, it kept throwing a Runtime error. I also attempted to use to split the gson method and have most of
 it in the Feeling_Storage class rather than in the GUI classes but I was unsuccessful.
 
@@ -81,7 +81,7 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
 
         savebutton = (Button) findViewById(R.id.savebutton);
 
-        /*Saves the emotion in the Main Activity's feelingList and sorts the list. The count arraylist is also
+        /*Saves the emotion in the feelingList and sorts the list. The count arraylist is also
         incremented to include the new emotion*/
         savebutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -96,20 +96,9 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
                 feelingslist.sort();
                 feelingslist.incrementcount(emotion);
                 saveFile();
-                save(v);
+                historyactivity(v);
             }
         });
-    }
-
-    //get the ID of the emotion chosen
-    public void rbclick (View view){
-
-    }
-
-    //Changes the Activity back to the Main Activity
-    public void save(View view){
-        Intent intent = new Intent(this, HistoryActivity.class);
-        startActivity(intent);
     }
 
     //Update and save the file since another emotion was added to it.
@@ -132,6 +121,7 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
         }
     }
 
+    //Changes the Activity to the History Activity
     public void historyactivity(View view) {
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
