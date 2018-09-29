@@ -2,11 +2,13 @@ package com.example.atyrrell.tyrrell1_feelsbook;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -27,16 +29,38 @@ public class HistoryActivity extends AppCompatActivity {
     private static ArrayList<Feelings> feelingshistory;
     private ListItemsAdapter adapter;
     private static final String FILENAME = "file.sav";
+    private Button Count;
+    private Button Record;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
+        //Initialize and set up the count button.
+        Button Count = (Button) findViewById(R.id.Countbutton);
+        Count.setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         CountActivity(v);
+                                     }
+                                 }
+        );
+
+        //Initialize and set up the record button.
+        Button Record = (Button) findViewById(R.id.record);
+        Record.setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         RecordActivity(v);
+                                     }
+                                 }
+        );
+
         //Create the List view
         allFeelings = (ListView) findViewById(R.id.listView);
 
-        feelingshistory = MainActivity.feelingslist.getFeelingslist();
+        feelingshistory = RecordNewFeelingActivity.feelingslist.getFeelingslist();
 
         //Initialize and set the custom adapter
         adapter = new ListItemsAdapter(this, feelingshistory);
@@ -47,7 +71,7 @@ public class HistoryActivity extends AppCompatActivity {
         allFeelings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Feelings currentfeeling = MainActivity.feelingslist.getFeeling(position);
+                Feelings currentfeeling = RecordNewFeelingActivity.feelingslist.getFeeling(position);
                 editAlertDialog(currentfeeling,position);
             }
         });
@@ -106,14 +130,14 @@ public class HistoryActivity extends AppCompatActivity {
                 is also saved because there were changes made to the recorded emotion.
                  */
 
-                if (editdate.getText().toString().equals(MainActivity.feelingslist.getFeeling(position).getDatetostring())){
-                    Date newdate = emotion.getStringtoDate(editdate.getText().toString());
-                    MainActivity.feelingslist.getFeeling(position).setTimestamp(newdate);
+                Date newdate = emotion.getStringtoDate(editdate.getText().toString());
+                RecordNewFeelingActivity.feelingslist.getFeeling(position).setTimestamp(newdate);
 
+                if (editdate.getText().toString().equals(RecordNewFeelingActivity.feelingslist.getFeeling(position).getDatetostring())){
                     emotion.setOptional_comment(editcomment.getText().toString());
-                    MainActivity.feelingslist.getFeeling(position).setOptional_comment(editcomment.getText().toString());
+                    RecordNewFeelingActivity.feelingslist.getFeeling(position).setOptional_comment(editcomment.getText().toString());
 
-                    MainActivity.feelingslist.sort();
+                    RecordNewFeelingActivity.feelingslist.sort();
                     saveFile();
                     adapter.notifyDataSetChanged();
                 }
@@ -128,12 +152,12 @@ public class HistoryActivity extends AppCompatActivity {
         });
 
         /*The delete button allows the user to delete the emotion from history. If it's deleted, the count is also
-        decremented for that emotion type. The file is then saved and the adapter is notified and updated */
+        decremented for that emotion type. The file is then saved and the adapter is notified and updated. */
         builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                MainActivity.feelingslist.decrementcount(emotion);
-                MainActivity.feelingslist.deleteFeeling(emotion);
+                RecordNewFeelingActivity.feelingslist.decrementcount(emotion);
+                RecordNewFeelingActivity.feelingslist.deleteFeeling(emotion);
                 saveFile();
                 adapter.notifyDataSetChanged();
             }
@@ -178,10 +202,21 @@ public class HistoryActivity extends AppCompatActivity {
     public void saveFile() {
         try {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-            MainActivity.feelingslist.saveFeelingFile(fos);
+            RecordNewFeelingActivity.feelingslist.saveFeelingFile(fos);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    //Change to the Count page
+    public void CountActivity(View view) {
+        Intent intent = new Intent(this, CountActivity.class);
+        startActivity(intent);
+    }
+
+    //Change to the Record page
+    public void RecordActivity(View view) {
+        Intent intent = new Intent(this, RecordNewFeelingActivity.class);
+        startActivity(intent);
+    }
 }

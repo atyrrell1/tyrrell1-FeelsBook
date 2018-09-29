@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">tyrrell1-FeelsBook</string>
-    <string name="record_feeling">RECORD A NEW FEELING</string>
-    <string name="history_key">HISTORY</string>
-    <string name="welcome_key">Welcome To FeelsBook</string>
     <string name="record_key">Record A New Feeling</string>
     <string name="history_name">History</string>
     <string name="count_button">COUNT</string>
@@ -15,8 +12,6 @@
     <string name="fear_key">Fear</string>
     <string name="comment_key">Optional Comment (max. 100 characters) :</string>
     <string name="save_key">SAVE</string>
-    <string name="date_key">Date</string>
-    <string name="time_key">Time</string>
-    <string name="datepicker_key">Date Picker</string>
-    <string name="timepicker_key">Time</string>
+    <string name="record_button">RECORD</string>
+    <string name="historybutton">HISTORY</string>
 </resources>

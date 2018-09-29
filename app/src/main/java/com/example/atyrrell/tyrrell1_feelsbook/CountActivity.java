@@ -24,7 +24,7 @@ public class CountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_count);
 
-        emotioncount = MainActivity.feelingslist.getCountlist();
+        emotioncount = RecordNewFeelingActivity.feelingslist.getCountlist();
 
         /*Display how many instances of love got recorded*/
         love_count = (TextView) findViewById(R.id.textView_lovecount);
