@@ -1,22 +1,20 @@
 package com.example.atyrrell.tyrrell1_feelsbook;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import android.widget.ListView;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 /*This class displays the emotions that the user has entered using a custom array adapter (located in the ListItemsAdapter class).
@@ -28,7 +26,6 @@ public class HistoryActivity extends AppCompatActivity {
     private ListView allFeelings;
     private static ArrayList<Feelings> feelingshistory;
     private ListItemsAdapter adapter;
-    private static final String FILENAME = "file.sav";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +41,11 @@ public class HistoryActivity extends AppCompatActivity {
                                      }
                                  }
         );
-
-        //Initialize and set up the record button.
-        Button Record = (Button) findViewById(R.id.record);
-        Record.setOnClickListener(new View.OnClickListener() {
-                                     @Override
-                                     public void onClick(View v) {
-                                         RecordActivity(v);
-                                     }
-                                 }
-        );
-
         //Create the List view
         allFeelings = (ListView) findViewById(R.id.listView);
 
-        RecordNewFeelingActivity.feelingslist.sort();
         feelingshistory = RecordNewFeelingActivity.feelingslist.getFeelingslist();
+        feelingshistory = sort(feelingshistory);
 
         //Initialize and set the custom adapter
         adapter = new ListItemsAdapter(this, feelingshistory);
@@ -84,38 +70,8 @@ public class HistoryActivity extends AppCompatActivity {
 
         //Initialize the AlertDialog builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        /*I chose to do a custom layout (of type LinearLayout) for the alertdialog. It allowed me to
-        show the Emotion, the date and the comment, as well as three buttons. */
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-
-        //To display the recorded emotion type, it must be added to the custom layout.
-        final TextView title = new TextView(this);
-        title.setText(emotion.getFeeling_type());
-        title.setTextSize(18);
-        layout.addView(title);
-
-        //To display "Date: ", it must be set and added to the custom layout.
-        final TextView editdatetitle = new TextView(this);
-        editdatetitle.setText("\n Date:");
-        layout.addView(editdatetitle);
-
-        //To display the recorded date, it must be added to the custom layout.
-        final EditText editdate = new EditText(this);
-        editdate.setText(emotion.getDatetostring());
-        layout.addView(editdate);
-
-        //To display "Optional Comment (max. 100 characters):", it must be set and added to the custom layout.
-        final TextView editcommenttitle = new TextView(this);
-        editcommenttitle.setText(" Optional Comment (max. 100 characters):\n");
-        layout.addView(editcommenttitle);
-
-        //To display the optional comment, it must be added to the custom layout.
-        final EditText editcomment = new EditText(this);
-        editcomment.setText(emotion.getOptionalComment());
-        layout.addView(editcomment);
-
+        final EditFeelingLayout layout = new EditFeelingLayout(emotion, this);
+        layout.setLayout();
         builder.setView(layout);
 
         //The Save button saves the user's edits to the emotion.
@@ -128,24 +84,18 @@ public class HistoryActivity extends AppCompatActivity {
                 is sorted by most recent recorded feelings and the adapter is notified and updated. The file
                 is also saved because there were changes made to the recorded emotion.
                  */
-
-                Date newdate = emotion.getStringtoDate(editdate.getText().toString());
+                Date newdate = emotion.getStringtoDate(layout.geteditdate().getText().toString());
                 RecordNewFeelingActivity.feelingslist.getFeeling(position).setTimestamp(newdate);
 
-                if (editdate.getText().toString().equals(RecordNewFeelingActivity.feelingslist.getFeeling(position).getDatetostring())){
-                    emotion.setOptional_comment(editcomment.getText().toString());
-                    RecordNewFeelingActivity.feelingslist.getFeeling(position).setOptional_comment(editcomment.getText().toString());
-
-                    RecordNewFeelingActivity.feelingslist.sort();
-                    saveFile();
-                    adapter.notifyDataSetChanged();
+                if (layout.geteditdate().getText().toString().equals(emotion.getDatetostring())){
+                    emotion.setOptional_comment(layout.geteditcomment().getText().toString());
+                    editfeeling(emotion,position);
                 }
 
                 else{
                     /*If the date is invalid, the exceptional alert dialog (informing the user that the date is invalid
-                    will be shown.
-                     */
-                    exceptionalertdialog();
+                    will be shown.*/
+                    exceptionalAlert();
                 }
             }
         });
@@ -155,9 +105,7 @@ public class HistoryActivity extends AppCompatActivity {
         builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                RecordNewFeelingActivity.feelingslist.deleteFeeling(emotion);
-                saveFile();
-                adapter.notifyDataSetChanged();
+            deletefeeling(emotion);
             }
         });
 
@@ -165,7 +113,6 @@ public class HistoryActivity extends AppCompatActivity {
         builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
             }
         });
 
@@ -174,12 +121,24 @@ public class HistoryActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    /*This Alert Dialog appears when the date changed by the user is invalid. It informs the user that the date entered is
-    invalid.*/
-    private void exceptionalertdialog(){
-        //Initialize the builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    //editfeeling will change the feeling
+    public void editfeeling(Feelings newfeeling, int position){
+        RecordNewFeelingActivity.feelingslist.deleteFeeling(newfeeling);
+        RecordNewFeelingActivity.feelingslist.addFeeling(newfeeling);
+        sort(feelingshistory);
+        RecordNewFeelingActivity.feelingslist.saveFile(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        adapter.notifyDataSetChanged();
+    }
 
+    //deletefeeling will remove the feeling from history
+    public void deletefeeling(Feelings emotion){
+        RecordNewFeelingActivity.feelingslist.deleteFeeling(emotion);
+        RecordNewFeelingActivity.feelingslist.saveFile(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        adapter.notifyDataSetChanged();
+    }
+
+    public void exceptionalAlert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //Set the error message
         builder.setTitle("Error");
         builder.setMessage("Invalid Date");
@@ -190,31 +149,25 @@ public class HistoryActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-
         /* Create the alertDialog from the builder and display it*/
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        AlertDialog dialog1 = builder.create();
+        dialog1.show();
     }
 
-    //Save the feelingsList into a file.
-    public void saveFile() {
-        try {
-            FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-            RecordNewFeelingActivity.feelingslist.saveFeelingFile(fos);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    //Sort an ArrayList by most recent Feelings
+    private ArrayList<Feelings> sort (ArrayList <Feelings> emotionlist){
+        Collections.sort(emotionlist, new Comparator<Feelings>() {
+            @Override
+            public int compare(Feelings o1, Feelings o2) {
+                return o2.getTimestamp().compareTo(o1.getTimestamp());
+            }
+        });
+        return emotionlist;
     }
 
     //Change to the Count page
    private void CountActivity(View view) {
         Intent intent = new Intent(this, CountActivity.class);
-        startActivity(intent);
-    }
-
-    //Change to the Record page
-    private void RecordActivity(View view) {
-        Intent intent = new Intent(this, RecordNewFeelingActivity.class);
         startActivity(intent);
     }
 }

@@ -56,10 +56,4 @@ public class Feelings {
             return new Date();
         }
     }
-
-    //convert an object of type Feelings into a String object
-    public String feelingstoString (){
-        return this.feeling_type + "|" + this.getDatetostring() + "|" + this.optional_comment + "\n";
-    }
-
 }
