@@ -29,8 +29,6 @@ public class HistoryActivity extends AppCompatActivity {
     private static ArrayList<Feelings> feelingshistory;
     private ListItemsAdapter adapter;
     private static final String FILENAME = "file.sav";
-    private Button Count;
-    private Button Record;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +58,7 @@ public class HistoryActivity extends AppCompatActivity {
         //Create the List view
         allFeelings = (ListView) findViewById(R.id.listView);
 
+        RecordNewFeelingActivity.feelingslist.sort();
         feelingshistory = RecordNewFeelingActivity.feelingslist.getFeelingslist();
 
         //Initialize and set the custom adapter
@@ -156,7 +155,6 @@ public class HistoryActivity extends AppCompatActivity {
         builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                RecordNewFeelingActivity.feelingslist.decrementcount(emotion);
                 RecordNewFeelingActivity.feelingslist.deleteFeeling(emotion);
                 saveFile();
                 adapter.notifyDataSetChanged();
@@ -209,13 +207,13 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     //Change to the Count page
-    public void CountActivity(View view) {
+   private void CountActivity(View view) {
         Intent intent = new Intent(this, CountActivity.class);
         startActivity(intent);
     }
 
     //Change to the Record page
-    public void RecordActivity(View view) {
+    private void RecordActivity(View view) {
         Intent intent = new Intent(this, RecordNewFeelingActivity.class);
         startActivity(intent);
     }

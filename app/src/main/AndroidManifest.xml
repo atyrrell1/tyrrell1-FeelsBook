@@ -34,6 +34,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HistoryActivity" />
         </activity>
+        <activity android:name=".EditActivity"
+            android:parentActivityName=".RecordNewFeelingActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -14,4 +14,8 @@
     <string name="save_key">SAVE</string>
     <string name="record_button">RECORD</string>
     <string name="historybutton">HISTORY</string>
+    <string name="edit">Edit Last Added Feeling</string>
+    <string name="edittitle">Add A Comment</string>
+    <string name="recordedat">Recorded at:</string>
+    <string name="editnew">Add Comment to Last Emotion</string>
 </resources>

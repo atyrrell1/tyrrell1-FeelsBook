@@ -17,14 +17,14 @@
 package com.example.atyrrell.tyrrell1_feelsbook;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,12 +45,15 @@ activity_record_new_feeling.xml file.
  */
 public class RecordNewFeelingActivity extends AppCompatActivity{
 
-    private RadioGroup feelingsgroup;
-    private RadioButton radioButton;
-    private Button savebutton;
+
+    private Button lovebutton;
+    private Button joybutton;
+    private Button surprisebutton;
+    private Button angerbutton;
+    private Button sadbutton;
+    private Button fearbutton;
     private Button historybutton;
-    private Integer radiobuttonid;
-    private EditText comment;
+    private Button editbutton;
 
     public static Feelings_Storage feelingslist = new Feelings_Storage();
     private static final String FILENAME = "file.sav";
@@ -62,15 +65,57 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
 
         //Initialize data.
         feelingslist.clearFeelingsList();
-        feelingslist.clearCountList();
 
         //Load data from the file into feelingslist object of type Feelings_Storage.
         loadFile();
-        feelingslist.getCount();
 
-        feelingsgroup = (RadioGroup) findViewById(R.id.feelingsgroup);
+        lovebutton = (Button) findViewById(R.id.lovebutton);
+        lovebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createFeeling("Love");
+            }
+        });
 
-        comment = (EditText) findViewById(R.id.editText);
+        joybutton = (Button) findViewById(R.id.joybutton);
+        joybutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createFeeling("Joy");
+            }
+        });
+
+        surprisebutton = (Button) findViewById(R.id.surprisebutton);
+        surprisebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createFeeling("Surprise");
+            }
+        });
+
+        angerbutton = (Button) findViewById(R.id.angerbutton);
+        angerbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createFeeling("Anger");
+            }
+        });
+
+        sadbutton = (Button) findViewById(R.id.sadnessbutton);
+        sadbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createFeeling("Sadness");
+            }
+        });
+
+        fearbutton = (Button) findViewById(R.id.fearbutton);
+        fearbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createFeeling("Fear");
+            }
+        });
 
         historybutton = (Button) findViewById(R.id.historybutton);
         historybutton.setOnClickListener(new View.OnClickListener(){
@@ -79,27 +124,39 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
             }
         });
 
-        savebutton = (Button) findViewById(R.id.savebutton);
-
-        /*Saves the emotion in the feelingList and sorts the list. The count arraylist is also
-        incremented to include the new emotion*/
-        savebutton.setOnClickListener(new View.OnClickListener() {
+        editbutton = (Button) findViewById(R.id.editlast);
+        editbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                radiobuttonid = feelingsgroup.getCheckedRadioButtonId();
-                radioButton = (RadioButton) findViewById(radiobuttonid);
-                //Gets the comment
-                String optionalcomment = comment.getText().toString();
-                //Creates a new Feeling object with the information the user recorded
-                Feelings emotion = new Feelings (radioButton.getText().toString(), new Date(), optionalcomment);
-
-                feelingslist.addFeeling(emotion);
-                feelingslist.sort();
-                feelingslist.incrementcount(emotion);
-                saveFile();
-                historyactivity(v);
+                editactivity(v);
             }
         });
+
+        if (feelingslist.getFeelingslist().size() > 0){
+            editbutton.setVisibility(View.VISIBLE);
+        }
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if (feelingslist.getFeelingslist().size() > 0){
+            editbutton.setVisibility(View.VISIBLE);
+        }
+        else{
+            editbutton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void createFeeling (String feelingdesc){
+        Feelings emotion = new  Feelings (feelingdesc, new Date(), "");
+        feelingslist.addFeeling(emotion);
+        if (feelingslist.getFeelingslist().size() > 0){
+            editbutton.setVisibility(View.VISIBLE);
+        }
+        saveFile();
+    }
+
 
     //Update and save the file since another emotion was added to it.
     public void saveFile() {
@@ -124,6 +181,12 @@ public class RecordNewFeelingActivity extends AppCompatActivity{
     //Changes the Activity to the History Activity
     public void historyactivity(View view) {
         Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
+    }
+
+    //Changes the Activity to the History Activity
+    public void editactivity(View view) {
+        Intent intent = new Intent(this, EditActivity.class);
         startActivity(intent);
     }
 
