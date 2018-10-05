@@ -16,7 +16,7 @@ last edited date: 2017.07.30
 
 retrieved date: 2018.09.15
 
-2. The load and save file functions were stylized after Joshua Charles Campbell Lonely Twitter project.
+2. The save file function were stylized after Joshua Charles Campbell Lonely Twitter project.
 
 author name: Joshua Charles Campbell
 
